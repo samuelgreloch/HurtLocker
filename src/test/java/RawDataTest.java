@@ -20,21 +20,37 @@ public class RawDataTest {
 
 
 @Test
-    public void testRecords(){
-String input = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016";
+    public void testRecords() {
+    String input = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016";
 
     Map<String, String> expectedMap = new HashMap<>();
-    expectedMap.put("naMe","Milk");
-    expectedMap.put("price","3.23");
-    expectedMap.put("type","food");
-    expectedMap.put("experition","1/24/2016");
+    expectedMap.put("naMe", "Milk");
+    expectedMap.put("price", "3.23");
+    expectedMap.put("type", "food");
+    expectedMap.put("experition", "1/24/2016");
 
     Map<String, String> actualMap = JerkSonParser.parseRecord(input);
 
-    assertEquals(expectedMap,actualMap);
-
-
+    assertEquals(expectedMap, actualMap);
 }
+
+    @Test
+
+            public void testInvalidRecord(){
+
+    String input = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016";
+
+        Map<String, String> expectedMap = new HashMap<>();
+        expectedMap.put("naMe","Milk");
+        expectedMap.put("expiration","1/25/2016");
+
+        Map<String, String> actualMap = JerkSonParser.parseRecord(input);
+
+        assertEquals(expectedMap, actualMap);
+
+    }
+
+
 
 
 }
