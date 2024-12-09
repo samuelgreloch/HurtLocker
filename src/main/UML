@@ -1,0 +1,45 @@
+
+
+
+
+
+
+
+JerkSonParser
+-rawData: String
+-parsedData: List<JerkSONEntry>
+-exceptionCount:int
+
++parseData: void
++handException(Exception)+: void
++generateReport(): String
++readRawData(file: String): String
+
+           |
+           v
+
+   JerkSONEntry
+   -key: String
+   -value: String
+
+   +validate(): boolean
+   +toString(): String
+
+
+          |
+          |
+          v
+         RegexUtil
+   +matchKey(key: String): String
+   +matchValue(value:String):String
+   +matchSeperator(sperator:String)
+
+   MissingKeyValueException
+
+   +MissingKeyValueException(string of a message"
+
+   GeneralParsingException
+   +GeneralParsingException(message)
+
+   Output formaeratter
+   formatOutput (data: List < JerskSONEntry>): String
