@@ -1,6 +1,8 @@
+import jdk.internal.util.SystemProps;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.FileReader;
 import java.util.HashMap;
@@ -21,61 +23,57 @@ import static org.junit.Assert.*;
 
 public class RawDataTest {
 
-    private static String RawData;
+    private Main data;
 
-    @Before
-    public void setup() throws Exception {
-        RawData = (new Main()).readRawDataToString();
+    @BeforeEach
+    public void setUp(){
+        data = new Main();
     }
 
 @Test
     public void testRecords() {
-    String input = RawData;
+    String RawData = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016##naME:BreaD;price:1.23;type:Food;expiration:1/02/2016##";
 
-    JerkSonParser parser = new JerkSonParser();
-    parser.readRawData(input);
-    parser.parseData();
+    String parsedData = data.parseRawData(RawData);
 
-    List<JerkSonParser> parsedData = parser.getParsedData();
+    String expectedOutput = "Name: Milk\\nPrice: 3.23\\nType: Food\\nExpiration: 1/25/2016\\n\\n" + "Name: Bread\\nPrice: 1.23\\nType: Food\\nExpiration: 1/02/2016\\n\\n";
 
-
-    assertNotNull(parsedData);
-    assertTrue(parsedData.size()>0);
-
-    assertEquals("Name:Milk",parsedData.get(0).toString());
-    assertEquals("Price:3.23",parsedData.get(1).toString());
-
-
-
-
-
-
+    assertEquals(expectedOutput, parsedData,"Parsed data matches output");
 }
 
     @Test
 
             public void testInvalidRecord(){
 
-    String input = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016";
 
-        Map<String, String> expectedMap = new HashMap<>();
-        expectedMap.put("naMe","Milk");
-        expectedMap.put("expiration","1/25/2016");
+        String RawData = "naMe:Milk;price:3.23;type:;expiration:1/25/2016##naME:BreaD;price:1.23;type:Food;expiration:##";
 
-        Map<String, String> actualMap = JerkSonParser.parseRecord(input);
+        String parsedData = data.parseRawData(RawData);
 
-        assertEquals(expectedMap, actualMap);
+        String expectedOutput = "Name: Milk\\nPrice: 3.23\\nType: N/A\\nExpiration: 1/25/2016\\n\\n\" +\n" +
+                "                \"Name: Bread\\nPrice: 1.23\\nType: Food\\nExpiration: N/A\\n\\n";
+
+        assertEquals(expectedOutput, parsedData, "Parsed data handles missing values");
+
+
+
 
     }
 
     @Test
     public void testException(){
 
-    String input = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016";
 
-    int exception = JerkSonParser.getExectionCount(input);
+        String RawData = "naMe:;price:;type:;expiration:1/25/2016##";
 
-    assertEquals(1,exception);
+        data.parseRawData(RawData);
+
+        List<String> exceptions = Main.getExceptions();
+
+        assertEquals(3,exceptions.size(),"There are 3 exceptions");
+        assertTrue("Exception for Name should be logged", exceptions.contains("Missing value for key: Name"));
+        assertTrue("Exception of missing Price", exceptions.contains("Missing value for key: Price"));
+        assertTrue("Exception of missing Type", exceptions.contains("Missing value for key: Type"));
 
     }
 
@@ -83,12 +81,7 @@ public class RawDataTest {
     @Test
     public void testEmpty(){
 
-    String emptyInput = "";
-
-        Map<String, String> result = JerkSonParser.parseRecord(emptyInput);
-
-        assertTrue(result.isEmpty());
-
+  String 
 
     }
 
