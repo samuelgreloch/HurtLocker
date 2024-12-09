@@ -50,6 +50,21 @@ public class RawDataTest {
 
     }
 
+    @Test
+    public void testException(){
+
+    String input = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016";
+
+    int exception = JerkSonParser.getExectionCount(input);
+
+    assertEquals(1,exception);
+
+    }
+
+
+    
+
+
 
 
 
