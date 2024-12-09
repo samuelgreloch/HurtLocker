@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 // const matches = 'Some Text'.match(regex);
@@ -62,7 +63,19 @@ public class RawDataTest {
     }
 
 
-    
+    @Test
+    public void testEmpty(){
+
+    String emptyInput = "";
+
+        Map<String, String> result = JerkSonParser.parseRecord(emptyInput);
+
+        assertTrue(result.isEmpty());
+
+
+    }
+
+
 
 
 
